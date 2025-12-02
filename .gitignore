@@ -1,0 +1,67 @@
+############################
+# Build / Maven
+############################
+/target/
+/surefire-reports/
+/failsafe-reports/
+/allure-results/
+/allure-report/
+
+############################
+# Maven Wrapper
+############################
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+.mvn/wrapper/MavenWrapperDownloader.java
+
+############################
+# Kotlin (caso use)
+############################
+.kotlin/
+
+############################
+# IntelliJ IDEA
+############################
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Arquivos específicos (se quiser manter algum, remova a linha daqui)
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+
+############################
+# Eclipse
+############################
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+############################
+# NetBeans
+############################
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+############################
+# VS Code
+############################
+.vscode/
+
+############################
+# SO / Outros
+############################
+.DS_Store
+Thumbs.db
+*.log

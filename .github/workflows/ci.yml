@@ -1,0 +1,52 @@
+name: Automation Tests - API & Web
+run-name: Prova Automacao - API & Web Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  api-web-tests:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Run Maven tests (API + Web)
+        run: mvn -B -Dmaven.test.failure.ignore=true clean test
+
+      - name: Publish test results to GitHub
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: "Prova Automacao - Java API & Web Tests"
+          path: "target/surefire-reports/*.xml"
+          reporter: "java-junit"
+          fail-on-error: true
+
+      - name: Package test artifacts
+        if: always()
+        run: |
+          mkdir -p artifact
+          cp -r target/surefire-reports artifact/surefire-reports || true
+          cp -r target/allure-results artifact/allure-results || true
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-test-results
+          path: artifact
