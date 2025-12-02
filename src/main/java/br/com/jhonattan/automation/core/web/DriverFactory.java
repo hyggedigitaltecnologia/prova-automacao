@@ -3,37 +3,42 @@ package br.com.jhonattan.automation.core.web;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
-public final class DriverFactory {
+public class DriverFactory {
 
-    private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
-
-    private DriverFactory() {
-
-    }
-
-    public static void initDriver() {
-        if (DRIVER.get() == null) {
-            WebDriverManager.chromedriver().setup();
-            WebDriver driver = new ChromeDriver();
-            driver.manage().window().maximize();
-            DRIVER.set(driver);
-        }
-    }
+    private static WebDriver driver;
 
     public static WebDriver getDriver() {
-        WebDriver driver = DRIVER.get();
         if (driver == null) {
-            throw new IllegalStateException("Driver não inicializado. Chame initDriver() antes.");
+            startDriver();
         }
         return driver;
     }
 
+    private static void startDriver() {
+        WebDriverManager.chromedriver().setup();
+
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--window-size=1920,1080");
+
+        String ci = System.getenv("CI");
+        if ("true".equalsIgnoreCase(ci)) {
+            options.addArguments(
+                    "--headless=new",
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--disable-gpu"
+            );
+        }
+
+        driver = new ChromeDriver(options);
+    }
+
     public static void quitDriver() {
-        WebDriver driver = DRIVER.get();
         if (driver != null) {
             driver.quit();
-            DRIVER.remove();
+            driver = null;
         }
     }
 }
