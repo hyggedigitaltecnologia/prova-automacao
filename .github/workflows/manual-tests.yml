@@ -1,0 +1,74 @@
+name: Manual Run - Automation Tests
+run-name: Manual Run - ${{ inputs.test_scope }} Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_scope:
+        type: choice
+        description: Quais testes devem ser executados?
+        required: true
+        default: all
+        options:
+          - all
+          - api
+          - web
+
+jobs:
+  manual-tests:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Run Maven tests (manual scope)
+        run: |
+          SCOPE="${{ inputs.test_scope }}"
+          MVN_CMD="mvn -B -Dmaven.test.failure.ignore=true clean test"
+
+          if [ "$SCOPE" = "api" ]; then
+            MVN_CMD="mvn -B -Dmaven.test.failure.ignore=true -Dtest=ApiTestSuite test"
+          elif [ "$SCOPE" = "web" ]; then
+            MVN_CMD="mvn -B -Dmaven.test.failure.ignore=true -Dtest=WebTestSuite test"
+          fi
+
+          echo "Running: $MVN_CMD"
+          $MVN_CMD
+
+      - name: Publish test results to GitHub
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: "Manual Run - Java Automation Tests"
+          path: "target/surefire-reports/*.xml"
+          reporter: "java-junit"
+          fail-on-error: false
+
+      - name: Package test artifacts
+        if: always()
+        run: |
+          mkdir -p artifact
+          cp -r target/surefire-reports artifact/surefire-reports || true
+          cp -r target/allure-results artifact/allure-results || true
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-run-results
+          path: artifact
