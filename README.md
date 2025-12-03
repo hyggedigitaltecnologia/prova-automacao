@@ -1,6 +1,6 @@
 # 📘 Prova de Automação – API + Web (Java / Maven)
 
-Este projeto contém uma prova de conceito de automação desenvolvida em **Java + Maven**, cobrindo:
+Este projeto apresenta uma prova de conceito de automação usando **Java + Maven**, cobrindo:
 
 * ✔ **Testes de API**
 
@@ -11,31 +11,30 @@ Este projeto contém uma prova de conceito de automação desenvolvida em **Java
     * Buscar produto e adicionar ao carrinho
     * Remover produto e validar carrinho vazio
 
-O objetivo é demonstrar boas práticas de automação, arquitetura limpa e integração simples com pipelines CI/CD.
+O foco é demonstrar **boas práticas de automação**, organização de projeto, page objects, testes confiáveis e integração total com **GitHub Actions**.
 
 ---
 
 # 🧱 Tecnologias Utilizadas
 
-| Componente     | Tecnologias                                        |
-| -------------- | -------------------------------------------------- |
-| Linguagem      | **Java 21+**                                       |
-| Build          | **Maven 3.8+**                                     |
-| Testes API     | **JUnit 5 + Rest-Assured (via clientes próprios)** |
-| Testes Web     | **Selenium WebDriver + WebDriverManager**          |
-| Design Pattern | **Page Object Model (POM)**                        |
-| Relatórios     | **Allure Reports** (opcional)                      |
-| CI             | GitHub Actions (pipeline incluída)                 |
+| Área            | Tecnologias                                  |
+| --------------- | -------------------------------------------- |
+| Linguagem       | **Java 21+**                                 |
+| Build           | **Maven 3.8+**                               |
+| Testes API      | **JUnit 5 + Rest-Assured (via API clients)** |
+| Testes Web      | **Selenium WebDriver + WebDriverManager**    |
+| Arquitetura Web | **Page Object Model (POM)**                  |
+| Relatórios      | **Allure Reports**                           |
+| CI/CD           | **GitHub Actions**                           |
 
 ---
 
 # 📂 Estrutura do Projeto
 
-```text
+```
 prova-automacao/
  ├─ src/
- │  ├─ main/
- │  │  └─ java/br/com/jhonattan/automation/
+ │  ├─ main/java/br/com/jhonattan/automation/
  │  │      ├─ config/
  │  │      │   └─ TestConfig.java
  │  │      ├─ core/
@@ -50,8 +49,7 @@ prova-automacao/
  │  │      └─ model/jsonplaceholder/
  │  │          └─ PostPayload.java
  │  │
- │  └─ test/
- │      └─ java/br/com/jhonattan/automation/
+ │  └─ test/java/br/com/jhonattan/automation/
  │          ├─ api/
  │          │   ├─ JsonPlaceholderTests.java
  │          │   └─ RestCountriesTests.java
@@ -59,8 +57,7 @@ prova-automacao/
  │          │   ├─ ApiTestSuite.java
  │          │   └─ WebTestSuite.java
  │          └─ web/
- │              ├─ core/
- │              │   └─ BasePage.java
+ │              ├─ core/BasePage.java
  │              ├─ pages/
  │              │   ├─ HomePage.java
  │              │   ├─ SearchResultPage.java
@@ -69,7 +66,6 @@ prova-automacao/
  │              └─ tests/
  │                  ├─ BaseWebTest.java
  │                  └─ RegisterFlowTests.java
- │
  ├─ pom.xml
  └─ README.md
 ```
@@ -80,66 +76,53 @@ prova-automacao/
 
 ## 🔹 Testes de API
 
-### 1️⃣ JSONPlaceholder – `/posts`
+### ✔ JSONPlaceholder – `/posts`
 
-* GET: validar estrutura de resposta
-* POST: criar novo recurso usando `PostPayload`
-* Validação de status code
-* Validação de tipos e campos da resposta
+* GET listando posts
+* POST criando um novo post
+* Validações de status, schema e estrutura
 
-**Arquivo:**
-
-```
-src/test/java/.../api/JsonPlaceholderTests.java
-```
+📄 Arquivo: `api/JsonPlaceholderTests.java`
 
 ---
 
-### 2️⃣ RESTCountries – `/v3.1/all`
+### ✔ RESTCountries – `/v3.1/all`
 
-* GET: verificar lista de países
-* Validar campos obrigatórios (`name`, `region`, `population`)
-* Validar que retorno não está vazio
+* GET retornando lista de países
+* Validação de campos obrigatórios
+* Garantia de resposta não vazia
 
-**Arquivo:**
-
-```
-src/test/java/.../api/RestCountriesTests.java
-```
+📄 Arquivo: `api/RestCountriesTests.java`
 
 ---
 
 ## 🔹 Testes Web (Netshoes)
 
-### 1️⃣ Buscar produto e adicionar ao carrinho
+### ✔ Buscar produto e adicionar ao carrinho
 
 Fluxo:
 
-* Abrir `https://www.netshoes.com.br`
-* Buscar `"Tênis"`
-* Abrir o primeiro resultado
-* Selecionar tamanho disponível
-* Clicar em **Adicionar ao Carrinho**
-* Abrir mini-carrinho
-* Validar que há item no carrinho
+1. Abrir Netshoes
+2. Pesquisar “Tênis”
+3. Abrir primeiro item
+4. Selecionar tamanho disponível
+5. Adicionar ao carrinho
+6. Validar item presente
 
-### 2️⃣ Remover produto e validar carrinho vazio
+---
 
-Fluxo:
+### ✔ Remover produto e validar carrinho vazio
 
-* Adicionar produto ao carrinho (pré-condição)
-* Clicar no ícone de remover
-* Validar a mensagem:
-
-```
-"Seu carrinho está vazio"
-```
-
-**Arquivo:**
+1. Adicionar item ao carrinho
+2. Acessar o carrinho
+3. Remover item
+4. Validar mensagem:
 
 ```
-src/test/java/.../web/tests/RegisterFlowTests.java
+Seu carrinho está vazio
 ```
+
+📄 Arquivo: `web/tests/RegisterFlowTests.java`
 
 ---
 
@@ -149,11 +132,11 @@ src/test/java/.../web/tests/RegisterFlowTests.java
 
 * JDK 17+ (Java 21 recomendado)
 * Maven 3.8+
-* Chrome instalado (WebDriverManager baixa o driver automaticamente)
+* Google Chrome instalado
 
 ---
 
-## ▶ Rodar todos os testes (API + Web)
+## ▶ Rodar todos os testes
 
 ```bash
 mvn clean test
@@ -161,7 +144,7 @@ mvn clean test
 
 ---
 
-## ▶ Rodar apenas testes de API
+## ▶ Rodar somente API
 
 ```bash
 mvn -Dtest=ApiTestSuite test
@@ -169,7 +152,7 @@ mvn -Dtest=ApiTestSuite test
 
 ---
 
-## ▶ Rodar apenas testes Web
+## ▶ Rodar somente Web
 
 ```bash
 mvn -Dtest=WebTestSuite test
@@ -179,98 +162,68 @@ mvn -Dtest=WebTestSuite test
 
 # 📊 Allure Report (opcional)
 
-Após rodar testes:
-
 ```bash
 allure serve allure-results
 ```
 
 ---
 
-# ⚙ Pipeline CI – GitHub Actions
-
-Para rodar os testes automaticamente no GitHub, use:
+# ⚙ Pipeline CI – Execução Automática (GitHub Actions)
 
 Arquivo: `.github/workflows/ci.yml`
 
-```yaml
-name: Automation Tests - API & Web
-run-name: Prova Automacao - API & Web Tests
+(…já incluído no projeto)
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
+Esse pipeline:
 
-jobs:
-  api-web-tests:
-    runs-on: ubuntu-latest
+* Builda o projeto
+* Executa todos os testes
+* Publica relatório nativo na aba **Checks**
+* Faz upload dos artefatos (JUnit + Allure)
 
-    permissions:
-      contents: read
-      checks: write
-      pull-requests: write
+---
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+# 🚀 Execução Manual via GitHub Actions
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
+Este projeto permite rodar **TESTES API ou WEB manualmente** pelo Actions usando `workflow_dispatch`.
 
-      - name: Run Maven tests (API + Web)
-        run: mvn -B -Dmaven.test.failure.ignore=true clean test
+Arquivo:
+`.github/workflows/manual-run.yml`
 
-      - name: Publish test results to GitHub
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: "Prova Automacao - Java API & Web Tests"  # nome que aparece no Check
-          path: "target/surefire-reports/*.xml"           # XMLs do Surefire
-          reporter: "java-junit"                          # tipo de reporter
-          fail-on-error: true                             # falha o job se houver testes falhando
+### Como usar pelo GitHub:
 
-      - name: Package test artifacts
-        if: always()
-        run: |
-          mkdir -p artifact
-          cp -r target/surefire-reports artifact/surefire-reports || true
-          cp -r target/allure-results artifact/allure-results || true
+1. Vá em **Actions**
+2. Escolha o workflow: **Manual Run - Automation Tests**
+3. Clique em **Run workflow**
+4. Preencha:
 
-      - name: Upload test artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: automation-test-results
-          path: artifact
+    * `test_type` → `api` ou `web`
+    * `suite` → nome da suíte (ex.: `ApiTestSuite` ou `WebTestSuite`)
+5. Executar
 
-```
+### Comportamentos:
+
+* Roda somente o tipo selecionado
+* Gera relatório no check
+* Publica artefatos
+* Permite execução on-demand
 
 ---
 
 # 🧩 Decisões de Arquitetura
 
-* **Page Object Model** para testes Web (mais limpo e sustentável)
-* Separação clara entre:
-
-    * `core/api` → infraestrutura de API
-    * `core/web` → infraestrutura de WebDriver
-    * `pages/` → elementos + ações
-    * `tests/` → somente lógica de teste
-* Suítes independentes (`ApiTestSuite` e `WebTestSuite`)
-* Evitei testes de login por conta de recaptcha/hardening da Netshoes
-* Testes Web seletivos focando no fluxo mais estável (carrinho)
+* Page Object Model para desacoplamento e legibilidade
+* API Clients isolados em `core/api`
+* WebDriver encapsulado em `DriverFactory`
+* Suítes independentes
+* Execução confiável focada **somente nos fluxos estáveis da Netshoes**
+* Login e Cadastro não foram automatizados devido a **recaptcha**, tornando o fluxo instável e não testável via automação sem violar políticas de segurança
 
 ---
 
 # 👤 Autor
 
 **Jhonattan Gomes**
-QA | Automação | APIs | Web | Integração Contínua
-LinkedIn: *[https://www.linkedin.com/in/jhonattan-vinicios-de-oliveira-gomes-6502aa233/]*
-Email: *[hyggedigitaltecnologia@gmail.com]*
-
----
+QA | Automação | APIs | Web | CI/CD
+🔗 LinkedIn: [https://www.linkedin.com/in/jhonattan-vinicios-de-oliveira-gomes-6502aa233/](https://www.linkedin.com/in/jhonattan-vinicios-de-oliveira-gomes-6502aa233/)
+📧 Email: [hyggedigitaltecnologia@gmail.com](mailto:hyggedigitaltecnologia@gmail.com)
